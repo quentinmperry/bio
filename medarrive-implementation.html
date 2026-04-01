@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedArrive Implementation — Quentin Perry</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink:#1a1208; --paper:#f5f0e8; --warm:#e8dcc8; --accent:#c4622d; --muted:#7a6e5f; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background:var(--paper); color:var(--ink); font-family:var(--sans); font-weight:300; line-height:1.7; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:100; opacity:0.5; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; align-items:center; padding:1.25rem 3rem; background:rgba(245,240,232,0.88); backdrop-filter:blur(12px); border-bottom:1px solid rgba(26,18,8,0.08); }
+  .nav-name { font-family:var(--serif); font-size:1.1rem; text-decoration:none; color:var(--ink); }
+  .nav-back { font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+  .nav-back:hover { color:var(--accent); }
+  .case-hero { min-height:55vh; display:flex; flex-direction:column; justify-content:flex-end; padding:8rem 3rem 4rem; background:var(--ink); color:var(--paper); position:relative; overflow:hidden; }
+  .case-hero::after { content:''; position:absolute; right:-10%; bottom:-20%; width:60vw; height:60vw; max-width:700px; border-radius:50%; background:radial-gradient(circle,rgba(196,98,45,0.12) 0%,transparent 65%); pointer-events:none; }
+  .case-eyebrow { font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.25rem; opacity:0; animation:fadeUp 0.7s 0.1s forwards; }
+  .case-title { font-family:var(--serif); font-size:clamp(2.2rem,5vw,4rem); line-height:1.1; max-width:760px; margin-bottom:2rem; opacity:0; animation:fadeUp 0.7s 0.25s forwards; }
+  .case-meta-row { display:flex; gap:3rem; flex-wrap:wrap; opacity:0; animation:fadeUp 0.7s 0.4s forwards; }
+  .meta-label { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(245,240,232,0.45); margin-bottom:0.25rem; }
+  .meta-value { font-size:0.9rem; color:rgba(245,240,232,0.85); }
+  .case-body { max-width:800px; margin:0 auto; padding:6rem 3rem; }
+  .section-block { margin-bottom:4rem; }
+  .block-label { font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.25rem; }
+  .block-heading { font-family:var(--serif); font-size:2rem; line-height:1.15; margin-bottom:1.5rem; }
+  .block-heading em { font-style:italic; color:var(--accent); }
+  .body-text { font-size:1.05rem; color:var(--ink); margin-bottom:1.25rem; }
+  .bullet-list { list-style:none; margin:1.25rem 0; }
+  .bullet-list li { font-size:1rem; padding:0.65rem 0 0.65rem 1.5rem; border-bottom:1px solid rgba(26,18,8,0.07); position:relative; color:var(--ink); }
+  .bullet-list li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
+  .bullet-list li:first-child { border-top:1px solid rgba(26,18,8,0.07); }
+  .divider { height:1px; background:rgba(26,18,8,0.1); margin:4rem 0; }
+  .outcome-box { background:var(--warm); padding:2.5rem; border-left:3px solid var(--accent); margin:2rem 0; }
+  .outcome-box p { font-size:1rem; color:var(--ink); margin-bottom:0.75rem; }
+  .outcome-box p:last-child { margin-bottom:0; }
+  .press-links { display:flex; flex-direction:column; gap:0.5rem; margin-top:1.5rem; }
+  .press-link { font-size:0.85rem; color:var(--accent); text-decoration:none; border-bottom:1px solid rgba(196,98,45,0.3); padding-bottom:0.5rem; transition:border-color 0.2s; }
+  .press-link:hover { border-color:var(--accent); }
+  .nav-footer { padding:4rem 3rem; background:var(--warm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem; }
+  .nav-footer-label { font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; }
+  .nav-footer-title { font-family:var(--serif); font-size:1.25rem; }
+  .btn-primary { background:var(--ink); color:var(--paper); text-decoration:none; padding:0.85rem 2rem; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; transition:background 0.2s,transform 0.2s; display:inline-block; }
+  .btn-primary:hover { background:var(--accent); transform:translateY(-2px); }
+  footer { padding:2rem 3rem; border-top:1px solid rgba(26,18,8,0.1); display:flex; justify-content:space-between; }
+  footer p { font-size:0.75rem; color:var(--muted); }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s,transform 0.7s; }
+  .reveal.visible { opacity:1; transform:none; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @media(max-width:768px){ nav{padding:1rem 1.5rem;} .case-hero{padding:6rem 1.5rem 3rem;} .case-body{padding:4rem 1.5rem;} .case-meta-row{gap:1.5rem;} .nav-footer{padding:3rem 1.5rem;} footer{padding:1.5rem;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-name">Quentin Perry</a>
+  <a href="index.html#work" class="nav-back">← All Case Studies</a>
+</nav>
+
+<header class="case-hero">
+  <p class="case-eyebrow">Case Study &nbsp;·&nbsp; ChristianaCare Health System</p>
+  <h1 class="case-title">SaaS Logistics Platform Implementation — Hospital Care at Home</h1>
+  <div class="case-meta-row">
+    <div class="meta-item"><div class="meta-label">Vendor</div><div class="meta-value">MedArrive</div></div>
+    <div class="meta-item"><div class="meta-label">Stakeholder Scope</div><div class="meta-value">4–5 Groups</div></div>
+    <div class="meta-item"><div class="meta-label">Timeline</div><div class="meta-value">MVP in 90–120 Days</div></div>
+    <div class="meta-item"><div class="meta-label">Outcome</div><div class="meta-value">On-time Go-live + Expanded Paramedic Utilization</div></div>
+  </div>
+</header>
+
+<main class="case-body">
+
+  <div class="section-block reveal">
+    <div class="block-label">Problem</div>
+    <h2 class="block-heading">Real-time visibility — and a 90-day clock with <em>no existing playbook.</em></h2>
+    <p class="body-text">ChristianaCare's Hospital Care at Home program needed a way to give virtual schedulers real-time visibility into paramedic location and availability across the service area. Without it, scheduling was based on estimated windows and manual check-ins, making it difficult to optimize in-home visit routing or respond dynamically to capacity gaps during the day.</p>
+    <p class="body-text">Leadership set an aggressive MVP target of 90 to 120 days for a novel logistics platform that had not been deployed in this clinical context before. The organization had no existing playbook for this type of implementation, and there was no dedicated implementation team. I was designated as the sole technical lead representing ChristianaCare.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Approach</div>
+    <h2 class="block-heading">Full ownership, every dimension, <em>simultaneously.</em></h2>
+    <p class="body-text">With full ownership of the implementation from kickoff through go-live, I managed every dimension of the project simultaneously:</p>
+    <ul class="bullet-list">
+      <li>Served as the sole point of contact between ChristianaCare and the MedArrive vendor team, owning all communication, escalation, and coordination across the engagement</li>
+      <li>Onboarded and aligned with the vendor's original product manager, then absorbed the transition when that PM departed 30 days into the engagement — rapidly bringing the incoming PM up to speed on agreed scope, progress, and outstanding decisions</li>
+      <li>Conducted UAT across platform features, documented defects and enhancement requests, and communicated findings back to the vendor in a structured and actionable format</li>
+      <li>Partnered with internal IT to manage access control, device provisioning, compliance requirements, and all required technical documentation for the deployment</li>
+      <li>Coordinated across 4–5 internal stakeholder groups including virtual schedulers, paramedics, frontline managers, and executive and corporate directors to align on readiness, workflows, and go-live criteria</li>
+      <li>Designed and delivered end-user training for 6 paramedics and 4 virtual schedulers, ensuring both groups could operate the platform independently from day one</li>
+      <li>Captured, prioritized, and communicated all post-launch feedback and issues back to the vendor, maintaining a clear feedback loop throughout the pilot and early adoption phases</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Outcome</div>
+    <h2 class="block-heading">On time. And an insight that <em>expanded capacity without adding headcount.</em></h2>
+    <div class="outcome-box">
+      <p>The platform went live on time, within the 90–120 day MVP window. Virtual schedulers gained real-time visibility into paramedic status and location across the service area, replacing manual coordination with a live operational picture.</p>
+      <p>Beyond the core scheduling capability, the implementation surfaced an unexpected and high-value operational insight: paramedics had significantly more available capacity than prior reporting had indicated. Visit windows estimated at 2–4 hours were consistently completing closer to 1–2 hours, revealing that paramedics could realistically absorb additional tasks between visits. This finding directly informed capacity planning and opened the door to expanding utilization without increasing headcount.</p>
+    </div>
+    <p class="body-text">The platform also enabled visit check-in and check-out functionality visible to the MedArrive headquarters team, improving accountability and data fidelity at the organizational level.</p>
+    <p class="body-text">The implementation was featured in multiple press releases:</p>
+    <div class="press-links">
+      <a href="https://www.cbs42.com/business/press-releases/ein-presswire/835455199/medarrive-unveils-next-generation-home-care-logistics-platform/" target="_blank" class="press-link">MedArrive Unveils Next-Generation Home Care Logistics Platform ↗</a>
+      <a href="https://www.modernhealthcare.com/post-acute-care/mh-medarrive-christiana-care-logistics-platform/" target="_blank" class="press-link">MedArrive Launches Provider Logistics Tool to Drive In-Home Care ↗</a>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Relevance</div>
+    <p class="body-text">This engagement demonstrates end-to-end implementation ownership under compressed timelines, vendor relationship management through organizational instability, multi-level stakeholder coordination, UAT execution, and the ability to surface operational insights from newly deployed technology. It is representative of the dual BA and SA function performed across ChristianaCare's digital health portfolio.</p>
+  </div>
+
+</main>
+
+<div class="nav-footer">
+  <div>
+    <div class="nav-footer-label">Next Case Study</div>
+    <div class="nav-footer-title">MedWand Enterprise Deployment & Pivot Strategy</div>
+  </div>
+  <a href="medwand-deployment.html" class="btn-primary">Read Next →</a>
+</div>
+
+<footer>
+  <p>© 2026 Quentin Perry</p>
+  <p>Wilmington, DE</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),80); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

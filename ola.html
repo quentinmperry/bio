@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OLA Development & CAB Formation — Quentin Perry</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink:#1a1208; --paper:#f5f0e8; --warm:#e8dcc8; --accent:#c4622d; --muted:#7a6e5f; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background:var(--paper); color:var(--ink); font-family:var(--sans); font-weight:300; line-height:1.7; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:100; opacity:0.5; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; align-items:center; padding:1.25rem 3rem; background:rgba(245,240,232,0.88); backdrop-filter:blur(12px); border-bottom:1px solid rgba(26,18,8,0.08); }
+  .nav-name { font-family:var(--serif); font-size:1.1rem; text-decoration:none; color:var(--ink); }
+  .nav-back { font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+  .nav-back:hover { color:var(--accent); }
+  .case-hero { min-height:55vh; display:flex; flex-direction:column; justify-content:flex-end; padding:8rem 3rem 4rem; background:var(--ink); color:var(--paper); position:relative; overflow:hidden; }
+  .case-hero::after { content:''; position:absolute; right:-10%; bottom:-20%; width:60vw; height:60vw; max-width:700px; border-radius:50%; background:radial-gradient(circle,rgba(196,98,45,0.12) 0%,transparent 65%); pointer-events:none; }
+  .case-eyebrow { font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.25rem; opacity:0; animation:fadeUp 0.7s 0.1s forwards; }
+  .case-title { font-family:var(--serif); font-size:clamp(2.2rem,5vw,4rem); line-height:1.1; max-width:760px; margin-bottom:2rem; opacity:0; animation:fadeUp 0.7s 0.25s forwards; }
+  .case-meta-row { display:flex; gap:3rem; flex-wrap:wrap; opacity:0; animation:fadeUp 0.7s 0.4s forwards; }
+  .meta-item { }
+  .meta-label { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(245,240,232,0.45); margin-bottom:0.25rem; }
+  .meta-value { font-size:0.9rem; color:rgba(245,240,232,0.85); }
+  .case-body { max-width:800px; margin:0 auto; padding:6rem 3rem; }
+  .section-block { margin-bottom:4rem; }
+  .block-label { font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.25rem; }
+  .block-heading { font-family:var(--serif); font-size:2rem; line-height:1.15; margin-bottom:1.5rem; }
+  .block-heading em { font-style:italic; color:var(--accent); }
+  .body-text { font-size:1.05rem; color:var(--ink); margin-bottom:1.25rem; }
+  .body-text:last-child { margin-bottom:0; }
+  .bullet-list { list-style:none; margin:1.25rem 0; }
+  .bullet-list li { font-size:1rem; padding:0.65rem 0 0.65rem 1.5rem; border-bottom:1px solid rgba(26,18,8,0.07); position:relative; color:var(--ink); }
+  .bullet-list li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
+  .bullet-list li:first-child { border-top:1px solid rgba(26,18,8,0.07); }
+  .divider { height:1px; background:rgba(26,18,8,0.1); margin:4rem 0; }
+  .outcome-box { background:var(--warm); padding:2.5rem; border-left:3px solid var(--accent); margin:2rem 0; }
+  .outcome-box p { font-size:1rem; color:var(--ink); margin-bottom:0.75rem; }
+  .outcome-box p:last-child { margin-bottom:0; }
+  .nav-footer { padding:4rem 3rem; background:var(--warm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem; }
+  .nav-footer-label { font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; }
+  .nav-footer-title { font-family:var(--serif); font-size:1.25rem; }
+  .btn-primary { background:var(--ink); color:var(--paper); text-decoration:none; padding:0.85rem 2rem; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; transition:background 0.2s,transform 0.2s; display:inline-block; }
+  .btn-primary:hover { background:var(--accent); transform:translateY(-2px); }
+  footer { padding:2rem 3rem; border-top:1px solid rgba(26,18,8,0.1); display:flex; justify-content:space-between; }
+  footer p { font-size:0.75rem; color:var(--muted); }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s,transform 0.7s; }
+  .reveal.visible { opacity:1; transform:none; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @media(max-width:768px){ nav{padding:1rem 1.5rem;} .case-hero{padding:6rem 1.5rem 3rem;} .case-body{padding:4rem 1.5rem;} .case-meta-row{gap:1.5rem;} .nav-footer{padding:3rem 1.5rem;} footer{padding:1.5rem;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-name">Quentin Perry</a>
+  <a href="index.html#work" class="nav-back">← All Case Studies</a>
+</nav>
+
+<header class="case-hero">
+  <p class="case-eyebrow">Case Study &nbsp;·&nbsp; The Boeing Company</p>
+  <h1 class="case-title">OLA Development & CAB Formation</h1>
+  <div class="case-meta-row">
+    <div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">End User Service Assurance Analyst</div></div>
+    <div class="meta-item"><div class="meta-label">Stakeholder Scope</div><div class="meta-value">4–6 Departments / Business Units</div></div>
+    <div class="meta-item"><div class="meta-label">Deliverable</div><div class="meta-value">Operational Level Agreement (OLA)</div></div>
+    <div class="meta-item"><div class="meta-label">Outcome</div><div class="meta-value">Establishment of the Change Advisory Board</div></div>
+  </div>
+</header>
+
+<main class="case-body">
+
+  <div class="section-block reveal">
+    <div class="block-label">Problem</div>
+    <h2 class="block-heading">A major outage exposed a structural <em>governance gap.</em></h2>
+    <p class="body-text">A major outage took down a critical communication service across the entire organization, exposing a significant structural gap: there was no formal agreement defining who owned what, who needed to be contacted during incidents or changes, what the expected response timelines were, or how different teams were expected to engage with one another during high-impact events.</p>
+    <p class="body-text">Without a shared framework, cross-departmental coordination during the outage was reactive and inconsistent. Teams operated in silos, escalation paths were unclear, and there was no authoritative source to turn to for rules of engagement. Leadership and Information Security identified this as an unacceptable risk and initiated a formal response.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Approach</div>
+    <h2 class="block-heading">Sole author. <em>Structured solution.</em></h2>
+    <p class="body-text">Tasked by leadership and Information Security as the sole author of the solution, I designed and produced a formal Operational Level Agreement to address the identified gaps. The work involved:</p>
+    <ul class="bullet-list">
+      <li>Conducting stakeholder discovery across 4–6 business units to identify key persons of contact, ownership boundaries, and current escalation practices</li>
+      <li>Translating informal, undocumented norms into structured SLA and escalation commitments that all parties could be held accountable to</li>
+      <li>Defining rules of engagement for requested changes, including communication requirements, approval thresholds, and notification timelines</li>
+      <li>Aligning leadership and Information Security on document structure, scope, and enforceability before finalizing</li>
+      <li>Producing a finalized OLA that served as a single source of truth across all covered departments for incident response and change communication</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Outcome</div>
+    <h2 class="block-heading">A lasting artifact that <em>changed how Boeing managed risk.</em></h2>
+    <div class="outcome-box">
+      <p>The OLA directly enabled the formation of the Change Advisory Board (CAB) at Boeing, providing the governance foundation the CAB needed to operate with defined accountability and cross-departmental alignment.</p>
+      <p>The document became the authoritative reference for all major incidents and change communications going forward, eliminating the ambiguity that had contributed to the original outage response.</p>
+    </div>
+    <p class="body-text">This work demonstrated the ability to take an unstructured, high-stakes organizational problem, design a formal governance solution from scratch, align multiple stakeholders on its content, and produce a lasting artifact that changed how the organization managed risk.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Relevance</div>
+    <p class="body-text">This work reflects core BA competencies including requirements elicitation, stakeholder alignment, process documentation, and governance design. It also demonstrates initiative in translating a reactive organizational failure into a proactive, structured solution.</p>
+  </div>
+
+</main>
+
+<div class="nav-footer">
+  <div>
+    <div class="nav-footer-label">Next Case Study</div>
+    <div class="nav-footer-title">Requirements Workshop — MedArrive Pre-Implementation</div>
+  </div>
+  <a href="requirements-workshop.html" class="btn-primary">Read Next →</a>
+</div>
+
+<footer>
+  <p>© 2026 Quentin Perry</p>
+  <p>Wilmington, DE</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),80); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

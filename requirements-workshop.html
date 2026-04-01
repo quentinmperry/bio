@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Requirements Workshop — Quentin Perry</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink:#1a1208; --paper:#f5f0e8; --warm:#e8dcc8; --accent:#c4622d; --muted:#7a6e5f; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background:var(--paper); color:var(--ink); font-family:var(--sans); font-weight:300; line-height:1.7; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:100; opacity:0.5; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; align-items:center; padding:1.25rem 3rem; background:rgba(245,240,232,0.88); backdrop-filter:blur(12px); border-bottom:1px solid rgba(26,18,8,0.08); }
+  .nav-name { font-family:var(--serif); font-size:1.1rem; text-decoration:none; color:var(--ink); }
+  .nav-back { font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+  .nav-back:hover { color:var(--accent); }
+  .case-hero { min-height:55vh; display:flex; flex-direction:column; justify-content:flex-end; padding:8rem 3rem 4rem; background:var(--ink); color:var(--paper); position:relative; overflow:hidden; }
+  .case-hero::after { content:''; position:absolute; right:-10%; bottom:-20%; width:60vw; height:60vw; max-width:700px; border-radius:50%; background:radial-gradient(circle,rgba(196,98,45,0.12) 0%,transparent 65%); pointer-events:none; }
+  .case-eyebrow { font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.25rem; opacity:0; animation:fadeUp 0.7s 0.1s forwards; }
+  .case-title { font-family:var(--serif); font-size:clamp(2.2rem,5vw,4rem); line-height:1.1; max-width:760px; margin-bottom:2rem; opacity:0; animation:fadeUp 0.7s 0.25s forwards; }
+  .case-meta-row { display:flex; gap:3rem; flex-wrap:wrap; opacity:0; animation:fadeUp 0.7s 0.4s forwards; }
+  .meta-label { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(245,240,232,0.45); margin-bottom:0.25rem; }
+  .meta-value { font-size:0.9rem; color:rgba(245,240,232,0.85); }
+  .case-body { max-width:800px; margin:0 auto; padding:6rem 3rem; }
+  .section-block { margin-bottom:4rem; }
+  .block-label { font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.25rem; }
+  .block-heading { font-family:var(--serif); font-size:2rem; line-height:1.15; margin-bottom:1.5rem; }
+  .block-heading em { font-style:italic; color:var(--accent); }
+  .body-text { font-size:1.05rem; color:var(--ink); margin-bottom:1.25rem; }
+  .bullet-list { list-style:none; margin:1.25rem 0; }
+  .bullet-list li { font-size:1rem; padding:0.65rem 0 0.65rem 1.5rem; border-bottom:1px solid rgba(26,18,8,0.07); position:relative; color:var(--ink); }
+  .bullet-list li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
+  .bullet-list li:first-child { border-top:1px solid rgba(26,18,8,0.07); }
+  .divider { height:1px; background:rgba(26,18,8,0.1); margin:4rem 0; }
+  .outcome-box { background:var(--warm); padding:2.5rem; border-left:3px solid var(--accent); margin:2rem 0; }
+  .outcome-box p { font-size:1rem; color:var(--ink); margin-bottom:0.75rem; }
+  .outcome-box p:last-child { margin-bottom:0; }
+  .nav-footer { padding:4rem 3rem; background:var(--warm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem; }
+  .nav-footer-label { font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; }
+  .nav-footer-title { font-family:var(--serif); font-size:1.25rem; }
+  .btn-primary { background:var(--ink); color:var(--paper); text-decoration:none; padding:0.85rem 2rem; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; transition:background 0.2s,transform 0.2s; display:inline-block; }
+  .btn-primary:hover { background:var(--accent); transform:translateY(-2px); }
+  footer { padding:2rem 3rem; border-top:1px solid rgba(26,18,8,0.1); display:flex; justify-content:space-between; }
+  footer p { font-size:0.75rem; color:var(--muted); }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s,transform 0.7s; }
+  .reveal.visible { opacity:1; transform:none; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @media(max-width:768px){ nav{padding:1rem 1.5rem;} .case-hero{padding:6rem 1.5rem 3rem;} .case-body{padding:4rem 1.5rem;} .case-meta-row{gap:1.5rem;} .nav-footer{padding:3rem 1.5rem;} footer{padding:1.5rem;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-name">Quentin Perry</a>
+  <a href="index.html#work" class="nav-back">← All Case Studies</a>
+</nav>
+
+<header class="case-hero">
+  <p class="case-eyebrow">Case Study &nbsp;·&nbsp; ChristianaCare Health System</p>
+  <h1 class="case-title">Requirements Elicitation & User Story Workshop — Hospital Care at Home</h1>
+  <div class="case-meta-row">
+    <div class="meta-item"><div class="meta-label">Program</div><div class="meta-value">Hospital Care at Home / MedArrive Pre-Implementation</div></div>
+    <div class="meta-item"><div class="meta-label">Participants</div><div class="meta-value">4 Internal Stakeholders</div></div>
+    <div class="meta-item"><div class="meta-label">Deliverables</div><div class="meta-value">User Personas, User Stories, Requirements Documentation</div></div>
+    <div class="meta-item"><div class="meta-label">Downstream Use</div><div class="meta-value">Vendor Discovery & Development Briefing</div></div>
+  </div>
+</header>
+
+<main class="case-body">
+
+  <div class="section-block reveal">
+    <div class="block-label">Problem</div>
+    <h2 class="block-heading">No shared understanding of what the platform <em>needed to do.</em></h2>
+    <p class="body-text">Before ChristianaCare could begin implementing MedArrive's logistics platform, there was no shared understanding of what the organization actually needed the platform to do. Clinical workflows, scheduling operations, and leadership priorities had never been formally documented from a requirements perspective, and the vendor had no structured input to guide their own discovery or development planning.</p>
+    <p class="body-text">Without a requirements foundation, the implementation risked being shaped by assumptions rather than validated organizational needs. There was also a gap in stakeholder alignment — different levels of the program, from the director down to the operational supervisor, had different lenses on what success looked like. Those perspectives needed to be surfaced, reconciled, and translated into something actionable before any vendor conversation could be productive.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Approach</div>
+    <h2 class="block-heading">A structured workshop to <em>surface and unify.</em></h2>
+    <p class="body-text">I designed and facilitated a pre-implementation requirements workshop with four key internal stakeholders to establish that foundation. The work involved:</p>
+    <ul class="bullet-list">
+      <li>Conducting a one-on-one interview with the program Director prior to the workshop to understand the program's strategic value, operational goals, and her definition of a successful outcome — framing the requirements work in the context of leadership priorities from the outset</li>
+      <li>Facilitating a structured workshop with the Director, Program Manager, Technical Manager, and Supervisor to surface how each role interacted with the existing workflow, what gaps they experienced, and what they needed a logistics platform to solve</li>
+      <li>Introducing the team to user story methodology, guiding participants through articulating needs in a structured format: as a [role], I need [capability], so that [outcome]</li>
+      <li>Developing user personas representing the key roles in the platform ecosystem — virtual schedulers, paramedics, and program leadership — grounding each story in a realistic operational context</li>
+      <li>Mapping user stories to corresponding requirements, creating a documented set of build needs that reflected both frontline workflow and executive-level value expectations</li>
+      <li>Compiling and packaging the personas, stories, and requirements into a structured artifact handed off to the MedArrive product manager to anchor their discovery process and brief their development team</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Outcome</div>
+    <h2 class="block-heading">A requirements artifact that <em>drove the entire implementation.</em></h2>
+    <div class="outcome-box">
+      <p>The workshop produced a complete requirements artifact that gave the vendor a clear, organizationally validated starting point for their discovery and development planning. Rather than entering early vendor conversations without direction, ChristianaCare arrived with documented personas, user stories, and mapped requirements that reflected input from every level of the program.</p>
+      <p>The original MedArrive product manager used the deliverable directly to structure their discovery conversations and brief their internal development team. This work became the foundation on which the full implementation was built, and the platform subsequently went live within the targeted 90–120 day MVP window.</p>
+    </div>
+    <p class="body-text">Equally important was the internal alignment the workshop produced. By bringing the Director, PM, Technical Manager, and Supervisor into the same structured conversation before implementation began, the organization entered the vendor relationship with a unified voice and a shared set of expectations.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Relevance</div>
+    <p class="body-text">This engagement demonstrates core business analysis competencies including stakeholder interviewing, facilitated requirements elicitation, persona development, user story creation, and requirements documentation. It reflects the ability to translate multi-stakeholder input into structured, actionable artifacts that drive downstream technical decisions.</p>
+  </div>
+
+</main>
+
+<div class="nav-footer">
+  <div>
+    <div class="nav-footer-label">Next Case Study</div>
+    <div class="nav-footer-title">MedArrive SaaS Platform Implementation</div>
+  </div>
+  <a href="medarrive-implementation.html" class="btn-primary">Read Next →</a>
+</div>
+
+<footer>
+  <p>© 2026 Quentin Perry</p>
+  <p>Wilmington, DE</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),80); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

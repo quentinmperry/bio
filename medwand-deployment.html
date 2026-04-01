@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedWand Enterprise Deployment — Quentin Perry</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --ink:#1a1208; --paper:#f5f0e8; --warm:#e8dcc8; --accent:#c4622d; --muted:#7a6e5f; --serif:'DM Serif Display',Georgia,serif; --sans:'DM Sans',sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background:var(--paper); color:var(--ink); font-family:var(--sans); font-weight:300; line-height:1.7; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:100; opacity:0.5; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:space-between; align-items:center; padding:1.25rem 3rem; background:rgba(245,240,232,0.88); backdrop-filter:blur(12px); border-bottom:1px solid rgba(26,18,8,0.08); }
+  .nav-name { font-family:var(--serif); font-size:1.1rem; text-decoration:none; color:var(--ink); }
+  .nav-back { font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color 0.2s; }
+  .nav-back:hover { color:var(--accent); }
+  .case-hero { min-height:55vh; display:flex; flex-direction:column; justify-content:flex-end; padding:8rem 3rem 4rem; background:var(--ink); color:var(--paper); position:relative; overflow:hidden; }
+  .case-hero::after { content:''; position:absolute; right:-10%; bottom:-20%; width:60vw; height:60vw; max-width:700px; border-radius:50%; background:radial-gradient(circle,rgba(196,98,45,0.12) 0%,transparent 65%); pointer-events:none; }
+  .case-eyebrow { font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.25rem; opacity:0; animation:fadeUp 0.7s 0.1s forwards; }
+  .case-title { font-family:var(--serif); font-size:clamp(2.2rem,5vw,4rem); line-height:1.1; max-width:760px; margin-bottom:2rem; opacity:0; animation:fadeUp 0.7s 0.25s forwards; }
+  .case-meta-row { display:flex; gap:3rem; flex-wrap:wrap; opacity:0; animation:fadeUp 0.7s 0.4s forwards; }
+  .meta-label { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(245,240,232,0.45); margin-bottom:0.25rem; }
+  .meta-value { font-size:0.9rem; color:rgba(245,240,232,0.85); }
+  .case-body { max-width:800px; margin:0 auto; padding:6rem 3rem; }
+  .section-block { margin-bottom:4rem; }
+  .block-label { font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.25rem; }
+  .block-heading { font-family:var(--serif); font-size:2rem; line-height:1.15; margin-bottom:1.5rem; }
+  .block-heading em { font-style:italic; color:var(--accent); }
+  .sub-heading { font-family:var(--serif); font-size:1.25rem; margin:2rem 0 1rem; color:var(--ink); }
+  .body-text { font-size:1.05rem; color:var(--ink); margin-bottom:1.25rem; }
+  .bullet-list { list-style:none; margin:1.25rem 0; }
+  .bullet-list li { font-size:1rem; padding:0.65rem 0 0.65rem 1.5rem; border-bottom:1px solid rgba(26,18,8,0.07); position:relative; color:var(--ink); }
+  .bullet-list li::before { content:'—'; position:absolute; left:0; color:var(--accent); }
+  .bullet-list li:first-child { border-top:1px solid rgba(26,18,8,0.07); }
+  .divider { height:1px; background:rgba(26,18,8,0.1); margin:4rem 0; }
+  .outcome-box { background:var(--warm); padding:2.5rem; border-left:3px solid var(--accent); margin:2rem 0; }
+  .outcome-box p { font-size:1rem; color:var(--ink); margin-bottom:0.75rem; }
+  .outcome-box p:last-child { margin-bottom:0; }
+  .nav-footer { padding:4rem 3rem; background:var(--warm); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem; }
+  .nav-footer-label { font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; }
+  .nav-footer-title { font-family:var(--serif); font-size:1.25rem; }
+  .btn-primary { background:var(--ink); color:var(--paper); text-decoration:none; padding:0.85rem 2rem; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; transition:background 0.2s,transform 0.2s; display:inline-block; }
+  .btn-primary:hover { background:var(--accent); transform:translateY(-2px); }
+  .btn-outline { border:1.5px solid var(--ink); color:var(--ink); text-decoration:none; padding:0.85rem 2rem; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; transition:border-color 0.2s,color 0.2s,transform 0.2s; display:inline-block; }
+  .btn-outline:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-2px); }
+  footer { padding:2rem 3rem; border-top:1px solid rgba(26,18,8,0.1); display:flex; justify-content:space-between; }
+  footer p { font-size:0.75rem; color:var(--muted); }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s,transform 0.7s; }
+  .reveal.visible { opacity:1; transform:none; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @media(max-width:768px){ nav{padding:1rem 1.5rem;} .case-hero{padding:6rem 1.5rem 3rem;} .case-body{padding:4rem 1.5rem;} .case-meta-row{gap:1.5rem;} .nav-footer{padding:3rem 1.5rem;} footer{padding:1.5rem;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-name">Quentin Perry</a>
+  <a href="index.html#work" class="nav-back">← All Case Studies</a>
+</nav>
+
+<header class="case-hero">
+  <p class="case-eyebrow">Case Study &nbsp;·&nbsp; ChristianaCare Health System</p>
+  <h1 class="case-title">MedWand Medical Device Platform — Enterprise Deployment & Pivot Strategy</h1>
+  <div class="case-meta-row">
+    <div class="meta-item"><div class="meta-label">Vendor</div><div class="meta-value">MedWand Solutions Inc.</div></div>
+    <div class="meta-item"><div class="meta-label">Programs</div><div class="meta-value">Hospital Care at Home, Virtual Primary Care, Pulmonology</div></div>
+    <div class="meta-item"><div class="meta-label">End Users Trained</div><div class="meta-value">5 Paramedics, 5 Virtual RNs, 5+ Providers</div></div>
+    <div class="meta-item"><div class="meta-label">Outcome</div><div class="meta-value">Full Enterprise Deployment Across Multiple Programs</div></div>
+  </div>
+</header>
+
+<main class="case-body">
+
+  <div class="section-block reveal">
+    <div class="block-label">Problem</div>
+    <h2 class="block-heading">A first-of-its-kind deployment with <em>no playbook and significant unknowns.</em></h2>
+    <p class="body-text">MedWand is a multi-function remote diagnostic device enabling auscultation of heart and lung sounds, skin visualization, oral and ear examination, and full virtual visit capability through its companion web platform. While established in clinical settings, MedWand had no prior experience deploying within a large health system at the scale and complexity of ChristianaCare.</p>
+    <p class="body-text">The initial use case was to equip Hospital Care at Home paramedics with the device for in-home patient visits, allowing remote specialist assessments across care sites. ChristianaCare had no existing playbook for this type of deployment, no dedicated implementation team, and significant unknowns around network compatibility, device security, clinical workflow integration, and end-user adoption across multiple roles and sites.</p>
+    <p class="body-text">I was designated as the sole technical lead, owning every dimension of the deployment from device procurement and security compliance through clinical training, workflow design, vendor coordination, and ongoing support.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Approach</div>
+    <h2 class="block-heading">Five simultaneous workstreams. <em>One person.</em></h2>
+
+    <h3 class="sub-heading">Device Procurement, Security & Compliance</h3>
+    <ul class="bullet-list">
+      <li>Procured and configured Android tablets for clinical use, securing them to operate within ChristianaCare's perimeter network and ensuring patient data protection standards were met</li>
+      <li>Navigated IT security review and obtained formal approval for device use within the perimeter network, managing all required compliance documentation</li>
+      <li>Led beta testing for an iPad implementation at a later stage, managing a separate device lifecycle and surfacing platform-specific findings back to MedWand</li>
+      <li>Served as the sole point of contact for all troubleshooting, access control, and platform updates across all device types and user groups</li>
+    </ul>
+
+    <h3 class="sub-heading">Discovery & Signal Integrity Problem</h3>
+    <ul class="bullet-list">
+      <li>Through direct conversations with paramedics in the field, surfaced a critical signal integrity issue affecting virtual visit quality during in-home use</li>
+      <li>Documented the issue, escalated findings to leadership, and led the internal discussion on alternative use cases while technical resolution was pursued</li>
+      <li>Multiple remediation methods were attempted in coordination with the vendor; none yielded consistent results, requiring a strategic pivot</li>
+    </ul>
+
+    <h3 class="sub-heading">Pivot Strategy — Brick-and-Mortar Deployment</h3>
+    <ul class="bullet-list">
+      <li>Reframed the deployment strategy to leverage MedWand at brick-and-mortar primary care locations across the state as an intermediary solution, relieving provider shortages while the signal issue was resolved</li>
+      <li>Traveled to approximately 4 practice sites to introduce the device, deliver hands-on training, and establish site-specific workflows tailored to each location's operational context</li>
+      <li>Captured feedback from each site visit and brought it back to inform workflow modifications and platform improvements</li>
+    </ul>
+
+    <h3 class="sub-heading">Clinical Training & Workflow Design</h3>
+    <ul class="bullet-list">
+      <li>Trained 6 paramedics, 5 virtual RNs, and 7 providers on the MedWand platform, virtual visit execution, device operation, and clinical best practices across multiple sessions and sites</li>
+      <li>Designed and built ChristianaCare-side workflows for virtual visits, coordinating directly with the MedWand vendor to align organizational workflows with platform capabilities</li>
+      <li>Introduced the device to mobile van units, training patient ambassadors on its use for population health outreach and on-site health fairs</li>
+    </ul>
+
+    <h3 class="sub-heading">Vendor Coordination & Resolution</h3>
+    <ul class="bullet-list">
+      <li>Maintained the sole liaison relationship between ChristianaCare and MedWand across the full engagement, owning all communication, issue escalation, feedback loops, and strategic planning</li>
+      <li>Coordinated with leadership to initiate a conversation with a separate vendor already embedded in the Hospital Care at Home program, proposing their closed-loop network be opened for collaboration with MedWand</li>
+      <li>The resulting vendor network collaboration successfully resolved the connectivity challenges in the field, fully unlocking the original Hospital Care at Home paramedic use case</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Outcome</div>
+    <h2 class="block-heading">One use case became <em>a multi-program enterprise deployment.</em></h2>
+    <div class="outcome-box">
+      <p>What began as a single-use-case deployment expanded into a multi-program, multi-site enterprise implementation touching Hospital Care at Home, Virtual Primary Care, and Pulmonary specialties. The pivot strategy kept the platform operational and clinically valuable during the period when the original use case was blocked, supporting approximately 10–15 visits across brick-and-mortar sites and providing meaningful relief during a period of provider shortage.</p>
+      <p>The vendor network collaboration that I helped initiate ultimately resolved the signal integrity issue entirely, restoring the original Hospital Care at Home paramedic use case and positioning MedWand for continued expansion within the health system. The deployment also extended into population health through mobile van units and health fairs — a use case that emerged organically from the field work.</p>
+    </div>
+    <p class="body-text">Throughout the engagement, I functioned simultaneously as technical lead, clinical trainer, workflow designer, compliance owner, device manager, and vendor relationship manager — a full-spectrum implementation role executed without a dedicated team.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-block reveal">
+    <div class="block-label">Relevance</div>
+    <p class="body-text">This engagement demonstrates adaptive problem-solving under real-world constraints, multi-stakeholder coordination across clinical and technical domains, end-user training and adoption management, vendor relationship ownership, compliance navigation, and the ability to pivot strategy when initial assumptions prove incorrect — all core competencies for senior BSA and implementation roles.</p>
+  </div>
+
+</main>
+
+<div class="nav-footer">
+  <div>
+    <div class="nav-footer-label">Back to</div>
+    <div class="nav-footer-title">All Case Studies</div>
+  </div>
+  <a href="index.html#work" class="btn-outline">← View All</a>
+</div>
+
+<footer>
+  <p>© 2026 Quentin Perry</p>
+  <p>Wilmington, DE</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),80); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

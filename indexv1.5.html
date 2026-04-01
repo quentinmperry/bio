@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quentin Perry</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1208; 
+    --paper: #f5f0e8; 
+    --warm: #e8dcc8;
+    --accent: #c4622d; 
+    --accent2: #2d6b8a; 
+    --muted: #7a6e5f;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html {
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    scroll-behavior: smooth;
+  }
+}
+
+  body { 
+    background: var(--paper); 
+    color: var(--ink); 
+    font-family: var(--sans); 
+    font-weight: 300; 
+    line-height: 1.7; 
+    overflow-x: hidden; }
+
+  /* NOIST TEXTURE OVERLAY */
+    body::before { 
+      content:'';
+      position:fixed; 
+      inset:0; 
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); 
+      pointer-events:none; 
+      z-index:100; 
+      opacity:0.5;
+     }
+ 
+  /* NAVIGATION */   
+  nav { 
+    position:fixed; 
+    top:0; 
+    left:0; 
+    right:0; 
+    z-index:50; 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    padding:1.25rem 3rem; 
+    background:rgba(245,240,232,0.88); 
+    backdrop-filter:blur(12px); 
+    border-bottom:1px solid rgba(26,18,8,0.08); 
+  }
+
+  .nav-name { 
+    font-family:var(--serif); 
+    font-size:1.5rem;
+    letter-spacing:0.01em; 
+  }
+
+  .nav-links { 
+    display:flex; 
+    gap:2.5rem; 
+    list-style:none; 
+  }
+
+  .nav-links a { 
+    color:var(--muted); 
+    text-decoration:none; 
+    font-size:1rem; 
+    letter-spacing:0.12em; 
+    text-transform:uppercase; 
+    transition:color 0.2s; 
+  }
+
+  .nav-links a:hover { color:var(--accent); }
+
+  /* HERO SECTION */
+  .hero { 
+    min-height:95vh; 
+    display:grid; 
+    grid-template-columns:1fr 1fr; 
+    align-items:center; 
+    padding:0 17rem; 
+    position:relative; 
+    overflow:hidden; 
+  }
+  
+  .hero::after { 
+    content:''; 
+    position:absolute; 
+    right:-5%; 
+    top:50%; 
+    transform:translateY(-50%); 
+    width:55vw; 
+    height:55vw; 
+    max-width:700px; 
+    max-height:700px; 
+    border-radius:50%; 
+    background:radial-gradient(circle,rgba(196,98,45,0.08) 0%,rgba(45,107,138,0.06) 50%,transparent 70%); 
+    pointer-events:none; 
+  }
+
+  .hero-text { max-width:560px; }
+
+  .hero-eyebrow { 
+    font-size: 1rem; 
+    letter-spacing: 0.2em; 
+    text-transform: uppercase; 
+    color: var(--accent); 
+    margin-bottom: 1.5rem; 
+    opacity: 0; 
+    animation: fadeUp 0.8s 0.1s forwards; 
+  }
+
+  .hero-title { 
+    font-family: var(--serif); 
+    font-size: clamp(3rem,6vw,5.5rem); 
+    line-height: 1.05; 
+    margin-bottom: 1.5rem; 
+    opacity: 0; 
+    animation: fadeUp 0.8s 0.25s forwards; 
+  }
+
+  .hero-title em { 
+    font-style: italic; 
+    color: var(--accent); 
+  }
+
+  .hero-sub { 
+    font-size: 1rem; 
+    color: var(--muted); 
+    max-width: 420px; 
+    margin-bottom: 2.5rem; 
+    opacity: 0;
+    animation:fadeUp 0.8s 0.4s forwards; 
+  }
+
+  .hero-ctas { 
+    display: flex; 
+    gap: 1rem; 
+    flex-wrap: wrap; 
+    opacity: 0; 
+    animation: fadeUp 0.8s 0.55s forwards; 
+  }
+
+  .btn-primary { 
+    background: var(--ink); 
+    color: var(--paper); 
+    text-decoration: none; 
+    padding: 0.85rem 2rem; 
+    font-size: 0.8rem; 
+    letter-spacing: 0.1em; 
+    text-transform: uppercase; 
+    transition: background 0.2s,transform 0.2s; 
+    display:inline-block; 
+  }
+
+  .btn-primary:hover { background:var(--accent); transform:translateY(-2px); }
+
+  .btn-outline { 
+    border:1.5px solid var(--ink); 
+    color:var(--ink); 
+    text-decoration:none; 
+    padding:0.85rem 2rem; 
+    font-size:0.8rem; 
+    letter-spacing:0.1em; 
+    text-transform:uppercase; 
+    transition:border-color 0.2s,color 0.2s,transform 0.2s; 
+    display:inline-block; 
+  }
+
+  .btn-outline:hover { 
+    border-color:var(--accent); 
+    color:var(--accent); 
+    transform:translateY(-2px); 
+  }
+
+  .hero-right { 
+    display:flex; 
+    justify-content:flex-end; 
+    align-items:center; 
+  }
+
+  .hero-stats { 
+    opacity:0; 
+    animation:fadeIn 1s 0.7s forwards; 
+  }
+
+  .stat-item { 
+    padding:2rem 2.5rem; 
+    border-top:1px solid rgba(26,18,8,0.12); 
+  }
+
+  .stat-item:last-child { 
+    border-bottom:1px solid rgba(26,18,8,0.12); 
+  }
+
+  .stat-num { 
+    font-family:var(--serif); 
+    font-size:3rem; 
+    line-height:1; 
+    color:var(--accent); 
+  }
+
+  .stat-label { 
+    font-size:0.75rem; 
+    letter-spacing:0.1em; 
+    text-transform:uppercase; 
+    color:var(--muted); 
+    margin-top:0.25rem; 
+  }
+
+  /* ABOUT SECTION */
+  #about { 
+    padding: 3rem 3rem 6rem;
+    scroll-margin-top: 5rem;
+   }
+
+  .about-grid { 
+    display:grid; 
+    grid-template-columns:1fr 2fr; 
+    gap: 6rem; 
+    align-items:start; 
+    max-width:1200px; 
+    margin: 0 auto; 
+  }
+
+  .about-label { 
+    font-family:var(--serif); 
+    font-size:2.5rem; 
+    line-height:1.1; 
+    position:sticky; 
+    top:5rem; 
+  }
+
+  .about-label em { 
+    color:var(--accent); 
+    font-style:italic; 
+  }
+
+  .about-body p { 
+    font-size:1.05rem; 
+    color:var(--ink); 
+    margin-bottom:1.5rem; 
+  }
+
+  .about-body p:first-child { 
+    font-family:var(--serif); 
+    font-size:1.35rem; 
+    line-height:1.5; 
+  }
+
+  .tag-row { 
+    display:flex; 
+    flex-wrap:wrap; 
+    gap:0.5rem; 
+    margin-top:2rem; 
+  }
+
+  .tag { 
+    background:var(--warm); 
+    padding:0.35rem 0.9rem; 
+    font-size:0.75rem; 
+    letter-spacing:0.05em; 
+    color:var(--ink); 
+    border:1px solid rgba(26,18,8,0.1); 
+  }
+
+  /* AI WORKFLOW SECTION */
+  #workflow { 
+    padding:6rem 3rem; 
+    background:var(--ink); 
+    color:var(--paper); 
+  }
+
+  .workflow-inner { 
+    max-width:1100px; 
+    margin:0 auto; 
+  }
+
+  .workflow-header { 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:flex-end; 
+    margin-bottom:4rem; 
+  }
+
+  .workflow-title { 
+    font-family:var(--serif); 
+    font-size:2.5rem; 
+    line-height:1.1; 
+  }
+
+  .workflow-title em { 
+    color:var(--accent); 
+    font-style:italic; 
+  }
+
+  .workflow-sub { 
+    max-width:340px; 
+    font-size:0.9rem; 
+    color:rgba(245,240,232,0.6); 
+    text-align:right; 
+  }
+  
+  .workflow-steps { 
+    display:grid; 
+    grid-template-columns:repeat(4,1fr); 
+  }
+
+  .step { 
+    padding:2rem 1.5rem; 
+    border-left:1px solid rgba(245,240,232,0.1); 
+  }
+
+  .step:first-child { border-left:none; }
+
+  .step-num { 
+    font-family:var(--serif); 
+    font-size:4rem; 
+    color:rgba(196,98,45,0.25); 
+    line-height:1; 
+    margin-bottom:1rem; 
+  }
+
+  .step-title { 
+    font-size:0.85rem; 
+    letter-spacing:0.1em; 
+    text-transform:uppercase; 
+    color:var(--paper); 
+    margin-bottom:0.75rem; 
+  }
+
+  .step-body { 
+    font-size:0.85rem; 
+    color:rgba(245,240,232,0.55); 
+    line-height:1.6; 
+  }
+
+  /* CASE STUDIES SECTION */
+  #work { padding:8rem 3rem; }
+
+  .work-inner { 
+    max-width:1100px; 
+    margin:0 auto; 
+  }
+
+  .section-header { 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:flex-end; 
+    margin-bottom:4rem; 
+  }
+
+  .section-title { 
+    font-family:var(--serif); 
+    font-size:2.5rem; 
+    line-height:1.1; 
+  }
+
+  .section-title em { 
+    color:var(--accent); 
+    font-style:italic;
+   }
+
+  .section-note { 
+    font-size:1rem; 
+    color:var(--muted); 
+    max-width:3000px; 
+    text-align:right; 
+  }
+
+  .cases-grid { 
+    display:grid; 
+    grid-template-columns:1fr 1fr; 
+    gap:2px; 
+  }
+
+  .case-card { 
+    background:var(--warm); 
+    padding:2.5rem; 
+    position:relative; 
+    overflow:hidden; 
+    transition:background 0.3s; 
+    text-decoration:none; 
+    color:inherit; 
+    display:block; 
+  }
+
+  .case-card::before { 
+    content:''; 
+    position:absolute; 
+    bottom:0; 
+    left:0; 
+    right:0; 
+    height:3px; 
+    background:var(--accent); 
+    transform:scaleX(0); 
+    transform-origin:left; 
+    transition:transform 0.3s; 
+  }
+
+  .case-card:hover { background:#e0d6c2; }
+
+  .case-card:hover::before { transform:scaleX(1); }
+
+  .case-org { 
+    font-size:0.7rem; 
+    letter-spacing:0.15em; 
+    text-transform:uppercase; 
+    color:var(--accent); 
+    margin-bottom:0.75rem; 
+  }
+
+  .case-title { 
+    font-family:var(--serif); 
+    font-size:1.5rem; 
+    line-height:1.2; 
+    margin-bottom:1rem; 
+  }
+
+  .case-body { 
+    font-size:0.875rem; 
+    color:var(--muted); 
+    line-height:1.65; 
+    margin-bottom:1.5rem; 
+  }
+
+  .case-meta { 
+    display:flex; 
+    gap:1.5rem; 
+    flex-wrap:wrap; 
+  }
+
+  .case-tag { 
+    font-size:0.7rem; 
+    letter-spacing:0.1em; 
+    text-transform:uppercase; 
+    color:var(--muted); 
+    padding:0.25rem 0.75rem; 
+    border:1px solid rgba(26,18,8,0.2); 
+  }
+
+  .case-arrow { 
+    position:absolute; 
+    top:2.5rem; 
+    right:2.5rem; 
+    font-size:1.25rem; 
+    color:var(--muted); 
+    transition:transform 0.3s,color 0.3s; 
+  }
+
+  .case-card:hover .case-arrow { 
+    transform:translate(4px,-4px); 
+    color:var(--accent); 
+  }
+
+  /* RESUME SECTION */
+  #resume { 
+    padding:6rem 3rem; 
+    background:var(--warm); 
+  }
+
+  .resume-inner { 
+    max-width:1100px; 
+    margin:0 auto; 
+    display:grid; 
+    grid-template-columns:1fr 1fr; 
+    gap:6rem; 
+    align-items:center; 
+  }
+
+  .resume-text .section-title { margin-bottom:1.5rem; }
+
+  .resume-text p { 
+    font-size:0.95rem; 
+    color:var(--muted); 
+    margin-bottom:2rem; 
+  }
+
+  .resume-versions { 
+    display:flex; 
+    flex-direction:column; 
+    gap:0.75rem; 
+  }
+
+  .resume-row { 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    padding:1rem 1.5rem; 
+    background:var(--paper); 
+    border:1px solid rgba(26,18,8,0.08); 
+    transition:border-color 0.2s; 
+  }
+
+  .resume-row:hover { border-color:var(--accent); }
+
+  .resume-row-label { font-size:0.85rem; }
+
+  .resume-row-link { 
+    font-size:0.75rem; 
+    letter-spacing:0.1em; 
+    text-transform:uppercase; 
+    color:var(--accent); 
+    text-decoration:none; 
+  }
+
+  /* CONTACT SECTION */
+  #contact { padding:8rem 3rem; }
+
+  .contact-inner { 
+    max-width:700px; 
+    margin:0 auto; 
+    text-align:center; 
+  }
+
+  .contact-inner .section-title { 
+    font-size:clamp(2.5rem,5vw,4rem); 
+    margin-bottom:1.5rem; 
+  }
+
+  .contact-inner p { 
+    font-size:1rem; 
+    color:var(--muted); 
+    margin-bottom:3rem; 
+  }
+
+  .contact-links { 
+    display:flex; 
+    justify-content:center; 
+    gap:1.5rem; 
+    flex-wrap:wrap; 
+  }
+
+  /*FOOTER*/
+  footer { 
+    padding:2rem 3rem; 
+    border-top:1px solid rgba(26,18,8,0.1); 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+  }
+
+  footer p { 
+    font-size:0.75rem; 
+    color:var(--muted); 
+  }
+  
+   /* ANIMATIONS */
+  @keyframes fadeUp { 
+    from{opacity:0;transform:translateY(20px)} 
+    to{opacity:1;transform:translateY(0)} 
+  }
+
+  @keyframes fadeIn { 
+    from{opacity:0} 
+    to{opacity:1} 
+  }
+
+  /* SCROLL REVEAL */
+  .reveal { 
+    opacity:0; 
+    transform:translateY(24px); 
+    transition:opacity 0.7s,transform 0.7s; 
+  }
+
+  .reveal.visible { 
+    opacity:1; 
+    transform:none; 
+  }
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting){ setTimeout(()=>entry.target.classList.add('visible'),80); observer.unobserve(entry.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (!target) return;
+      const top = target.getBoundingClientRect().top + window.scrollY - 80;
+      const start = window.scrollY;
+      const distance = top - start;
+      const duration = 1200;
+      let startTime = null;
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        const ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
+        window.scrollTo(0, start + distance * ease);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  });
+</script>
+
+  /* RESPONSIVE DESIGN */
+  @media(max-width:768px){
+    nav{padding:1rem 1.5rem;} 
+    .nav-links{display:none;}
+    .hero{grid-template-columns:1fr;padding:7rem 1.5rem 3rem;} 
+    .hero-right{display:none;}
+    .about-grid{grid-template-columns:1fr;gap:2rem;} 
+    .about-label{position:static;font-size:2rem;}
+    .workflow-steps{grid-template-columns:1fr 1fr;} 
+    .cases-grid{grid-template-columns:1fr;}
+    .resume-inner{grid-template-columns:1fr;gap:3rem;}
+    .workflow-header{flex-direction:column;align-items:flex-start;gap:1rem;} 
+    .workflow-sub{text-align:left;}
+
+    #about,#work,#contact{padding:5rem 1.5rem;}
+    #workflow,#resume{padding:5rem 1.5rem;}
+    .section-header{flex-direction:column;align-items:flex-start;gap:1rem;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->  
+<nav>
+  <div class="nav-name">Quentin Perry</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#workflow">AI Workflow</a></li>
+    <li><a href="#work">Case Studies</a></li>
+    <li><a href="#resume">Resume</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">Business Systems Analyst &nbsp;·&nbsp; Wilmington, DE</p>
+    <h1 class="hero-title">Systems<br>thinker.<br><em>Outcomes</em><br>driven.</h1>
+    <p class="hero-sub">10+ years bridging the gap between business goals and technology solutions across healthcare, aerospace, and start-ups.</p>
+    <div class="hero-ctas">
+      <a href="#work" class="btn-primary">View Case Studies</a>
+      <a href="#contact" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">10+</div><div class="stat-label">Years of Experience</div></div>
+      <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">Industries Served</div></div>
+      <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Major Platform Implementations</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-grid">
+    <div class="about-label reveal">The work<br><em>behind</em><br>the work.</div>
+    <div class="about-body reveal">
+      <p>I treat every system, process, and platform as a problem to be understood before it can be solved — working backward from outcomes to architecture, not the other way around.</p>
+      <p>My background spans healthcare IT at ChristianaCare Health System, enterprise software at Boeing, and start-ups through The Clay Collective. Across all three, the throughline is the same: translating what stakeholders need into requirements that technical teams can act on, then seeing it through to adoption.</p>
+      <p>As a continual learner and technologist, I'm increasingly focused on how AI tooling changes the way analysts do their work. I don't just read about these shifts — I've built workflows around them.</p>
+      <div class="tag-row">
+        <span class="tag">Requirements Elicitation & Translation</span><span class="tag">Stakeholder Management</span>
+        <span class="tag">UAT & QA</span><span class="tag">Change Management</span>
+        <span class="tag">SAFe Agile</span><span class="tag">Process Mapping</span>
+        <span class="tag">Jira / Confluence</span><span class="tag">Data Analysis</span>
+        <span class="tag">AI-Augmented Workflows</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="workflow">
+  <div class="workflow-inner">
+    <div class="workflow-header reveal">
+      <h2 class="workflow-title">AI-Augmented<br><em>Job Search System</em></h2>
+      <p class="workflow-sub">Built and architected a declarative screening agent using Claude — treating job descriptions as requirements documents.</p>
+    </div>
+    <div class="workflow-steps">
+      <div class="step reveal"><div class="step-num">01</div><div class="step-title">Define Rules</div><div class="step-body">Established scoring thresholds, YES/NO logic, and gap analysis criteria. The system executes consistently from there.</div></div>
+      <div class="step reveal"><div class="step-num">02</div><div class="step-title">Ingest JD</div><div class="step-body">Job descriptions are treated as requirements documents. Each role is parsed for must-haves, nice-to-haves, and signals.</div></div>
+      <div class="step reveal"><div class="step-num">03</div><div class="step-title">Score & Match</div><div class="step-body">The agent returns a match percentage, a YES/NO recommendation, the right resume version, and which case studies to attach.</div></div>
+      <div class="step reveal"><div class="step-num">04</div><div class="step-title">Iterate</div><div class="step-body">Gap analyses surface bridgeable mismatches. Resume versions and narrative framing are refined per role, not per whim.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="work-inner">
+    <div class="section-header reveal">
+      <h2 class="section-title">Selected<br><em>Case Studies</em></h2>
+      <p class="section-note">Click any card to read the full case study.</p>
+    </div>
+    <div class="cases-grid">
+      <a href="ola.html" class="case-card reveal">
+        <span class="case-arrow">↗</span>
+        <div class="case-org">The Boeing Company</div>
+        <h3 class="case-title">OLA Development & CAB Formation</h3>
+        <p class="case-body">Following a major service outage, sole-authored an Operational Level Agreement from scratch across 4–6 business units, directly enabling the formation of Boeing's Change Advisory Board.</p>
+        <div class="case-meta"><span class="case-tag">Governance Design</span><span class="case-tag">Stakeholder Alignment</span><span class="case-tag">Documentation</span></div>
+      </a>
+      <a href="requirements-workshop.html" class="case-card reveal">
+        <span class="case-arrow">↗</span>
+        <div class="case-org">ChristianaCare Health System</div>
+        <h3 class="case-title">Requirements Workshop — MedArrive Pre-Implementation</h3>
+        <p class="case-body">Designed and facilitated a pre-implementation requirements workshop with 4 internal stakeholders, producing personas, user stories, and mapped requirements that anchored the vendor's discovery process.</p>
+        <div class="case-meta"><span class="case-tag">Requirements Elicitation</span><span class="case-tag">User Stories</span><span class="case-tag">Facilitation</span></div>
+      </a>
+      <a href="medarrive-implementation.html" class="case-card reveal">
+        <span class="case-arrow">↗</span>
+        <div class="case-org">ChristianaCare Health System</div>
+        <h3 class="case-title">MedArrive SaaS Platform Implementation</h3>
+        <p class="case-body">Sole technical lead for a 90–120 day MVP implementation of a novel logistics platform. Go-live surfaced a capacity insight that expanded paramedic utilization without additional headcount.</p>
+        <div class="case-meta"><span class="case-tag">End-to-End Implementation</span><span class="case-tag">Vendor Management</span><span class="case-tag">UAT</span></div>
+      </a>
+      <a href="medwand-deployment.html" class="case-card reveal">
+        <span class="case-arrow">↗</span>
+        <div class="case-org">ChristianaCare Health System</div>
+        <h3 class="case-title">MedWand Enterprise Deployment & Pivot Strategy</h3>
+        <p class="case-body">Led a full enterprise deployment of a medical diagnostic device platform across multiple programs and sites. When a signal integrity issue blocked the primary use case, designed and executed a pivot strategy that kept the platform clinically valuable.</p>
+        <div class="case-meta"><span class="case-tag">Adaptive Strategy</span><span class="case-tag">Multi-site Rollout</span><span class="case-tag">Clinical Training</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="resume">
+  <div class="resume-inner">
+    <div class="resume-text reveal">
+      <h2 class="section-title">Resume<br><em>Versions</em></h2>
+      <p>Maintained across multiple role types. Each version surfaces the same experience through a different lens — systems analysis, implementation, product, or systems.</p>
+    </div>
+    <div class="resume-versions reveal">
+      <div class="resume-row"><span class="resume-row-label">Business Systems Analyst</span><a href="#contact" class="resume-row-link">→</a></div>
+      <div class="resume-row"><span class="resume-row-label">Implementation Strategist</span><a href="#contact" class="resume-row-link">→</a></div>
+      <div class="resume-row"><span class="resume-row-label">Product Specialist</span><a href="#contact" class="resume-row-link">→</a></div>
+      <div class="resume-row"><span class="resume-row-label">Customer Success Manager</span><a href="#contact" class="resume-row-link">→</a></div>
+      <div class="resume-row"><span class="resume-row-label">Information Systems Analyst</span><a href="#contact" class="resume-row-link">→</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-inner">
+    <h2 class="section-title reveal">Let's <em>talk.</em></h2>
+    <p class="reveal">Open to Technical Business Analyst, Systems Analyst, Implementation, and AI enablement roles. Based in Wilmington, DE — available for remote and hybrid opportunities.</p>
+    <div class="contact-links reveal">
+      <a href="mailto:quentinmperry@gmail.com" class="btn-primary">quentinmperry@gmail.com</a>
+      <a href="https://linkedin.com/in/queperry" target="_blank" class="btn-outline">LinkedIn Profile</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Quentin Perry</p>
+  <p>Wilmington, DE</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting){ setTimeout(()=>entry.target.classList.add('visible'),80); observer.unobserve(entry.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
