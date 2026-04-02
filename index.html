@@ -92,7 +92,7 @@
     display:grid; 
     grid-template-columns:1fr 1fr; 
     align-items:center; 
-    padding:0 17rem; 
+    padding:0 clamp(1.5rem, 8vw, 10rem);
     position:relative; 
     overflow:hidden; 
   }
@@ -612,24 +612,97 @@
   });
 </script>
 
-  /* RESPONSIVE DESIGN */
-  @media(max-width:768px){
-    nav{padding:1rem 1.5rem;} 
-    .nav-links{display:none;}
-    .hero{grid-template-columns:1fr;padding:7rem 1.5rem 3rem;} 
-    .hero-right{display:none;}
-    .about-grid{grid-template-columns:1fr;gap:2rem;} 
-    .about-label{position:static;font-size:2rem;}
-    .workflow-steps{grid-template-columns:1fr 1fr;} 
-    .cases-grid{grid-template-columns:1fr;}
-    .resume-inner{grid-template-columns:1fr;gap:3rem;}
-    .workflow-header{flex-direction:column;align-items:flex-start;gap:1rem;} 
-    .workflow-sub{text-align:left;}
+/* RESPONSIVE DESIGN */
 
-    #about,#work,#contact{padding:5rem 1.5rem;}
-    #workflow,#resume{padding:5rem 1.5rem;}
-    .section-header{flex-direction:column;align-items:flex-start;gap:1rem;}
+/* Tablet: 768px - 1024px */
+@media(max-width:1024px){
+  .hero{padding:0 3rem;}
+  .about-grid{gap:3rem;}
+  .workflow-steps{grid-template-columns:1fr 1fr;}
+  .step:nth-child(3){border-left:none;}
+  #work{padding:6rem 2rem;}
+  #about{padding:2rem 2rem 5rem;}
+}
+
+/* Mobile: up to 768px */
+@media(max-width:768px){
+  /* Nav */
+  nav{padding:1rem 1.25rem;}
+  .nav-name{font-size:1.1rem;}
+  .nav-links{display:none;}
+
+  /* Mobile hamburger hint */
+  nav::after{
+    content:'≡';
+    font-size:1.5rem;
+    color:var(--muted);
+    cursor:pointer;
   }
+
+  /* Hero */
+  .hero{
+    grid-template-columns:1fr;
+    min-height:auto;
+    padding:6rem 1.25rem 3rem;
+  }
+  .hero-right{display:none;}
+  .hero-title{font-size:clamp(2.5rem,10vw,4rem);}
+  .hero-eyebrow{font-size:0.7rem;}
+  .hero-sub{max-width:100%;}
+  .hero-ctas{flex-direction:column;}
+  .btn-primary,.btn-outline{text-align:center;}
+
+  /* About */
+  #about{padding:3rem 1.25rem 4rem;scroll-margin-top:4rem;}
+  .about-grid{grid-template-columns:1fr;gap:2rem;}
+  .about-label{position:static;font-size:1.75rem;margin-bottom:0.5rem;}
+  .about-body p:first-child{font-size:1.1rem;}
+
+  /* Workflow */
+  #workflow{padding:4rem 1.25rem;}
+  .workflow-header{flex-direction:column;align-items:flex-start;gap:1rem;}
+  .workflow-sub{text-align:left;max-width:100%;}
+  .workflow-title{font-size:2rem;}
+  .workflow-steps{grid-template-columns:1fr;}
+  .step{border-left:none;border-top:1px solid rgba(245,240,232,0.1);padding:1.5rem 0;}
+  .step:first-child{border-top:none;}
+  .step-num{font-size:3rem;}
+
+  /* Case studies */
+  #work{padding:4rem 1.25rem;scroll-margin-top:4rem;}
+  .section-header{flex-direction:column;align-items:flex-start;gap:0.75rem;}
+  .section-note{text-align:left;max-width:100%;}
+  .cases-grid{grid-template-columns:1fr;gap:2px;}
+  .case-title{font-size:1.25rem;}
+
+  /* Resume */
+  #resume{padding:4rem 1.25rem;scroll-margin-top:4rem;}
+  .resume-inner{grid-template-columns:1fr;gap:2.5rem;}
+  .resume-text p{margin-bottom:1rem;}
+
+  /* Contact */
+  #contact{padding:4rem 1.25rem;scroll-margin-top:4rem;}
+  .contact-links{flex-direction:column;align-items:center;}
+  .contact-inner .section-title{font-size:2.5rem;}
+
+  /* Footer */
+  footer{flex-direction:column;gap:0.5rem;text-align:center;padding:1.5rem;}
+
+  /* Tags */
+  .tag{font-size:0.7rem;}
+
+  /* Stat items */
+  .stat-item{padding:1rem 1.5rem;}
+  .stat-num{font-size:2.25rem;}
+}
+
+/* Small phones: up to 390px */
+@media(max-width:390px){
+  .hero-title{font-size:2.25rem;}
+  .case-card{padding:1.75rem 1.25rem;}
+  .case-arrow{top:1.75rem;right:1.25rem;}
+  #workflow,#work,#about,#resume,#contact{padding-left:1rem;padding-right:1rem;}
+}
 </style>
 </head>
 <body>
